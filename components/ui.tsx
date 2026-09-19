@@ -1,5 +1,6 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import {
+  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -151,11 +152,16 @@ const styles = StyleSheet.create({
     padding: space.md,
     borderWidth: 1,
     borderColor: 'rgba(79, 122, 86, 0.08)',
-    shadowColor: '#3E4A37',
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
-    shadowOffset: { width: 0, height: 8 },
-    elevation: 2,
+    ...Platform.select({
+      web: { boxShadow: '0 8px 18px rgba(62, 74, 55, 0.08)' },
+      default: {
+        shadowColor: '#3E4A37',
+        shadowOpacity: 0.08,
+        shadowRadius: 16,
+        shadowOffset: { width: 0, height: 8 },
+        elevation: 2,
+      },
+    }),
   },
   primary: {
     minHeight: 56,

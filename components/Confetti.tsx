@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef } from 'react';
-import { Animated, Easing, StyleSheet, View } from 'react-native';
+import { Animated, Easing, Platform, StyleSheet, View } from 'react-native';
 
 const PALETTE = ['#E8B86D', '#7BA37A', '#E39272', '#F0C2A0', '#6FAEA4', '#F4D46A', '#B197C6'];
 
@@ -27,7 +27,7 @@ export function Confetti({ token }: { token: number }) {
   if (token <= 0) return null;
 
   return (
-    <View pointerEvents="none" style={StyleSheet.absoluteFill}>
+    <View style={[StyleSheet.absoluteFill, { pointerEvents: 'none' }]}>
       {pieces.map((piece, i) => (
         <ConfettiBit key={`${token}-${i}`} piece={piece} />
       ))}
@@ -45,7 +45,7 @@ function ConfettiBit({ piece }: { piece: Piece }) {
       duration: 1100,
       delay: piece.delay,
       easing: Easing.out(Easing.quad),
-      useNativeDriver: true,
+      useNativeDriver: Platform.OS !== 'web',
     }).start();
   }, [piece.delay, progress]);
 

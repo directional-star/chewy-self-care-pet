@@ -13,6 +13,7 @@ import {
 
 import { Chewy } from '@/components/Chewy';
 import { Egg } from '@/components/Egg';
+import { Garden } from '@/components/Garden';
 import { Body, Dots, GhostButton, PrimaryButton, Screen, Title } from '@/components/ui';
 import { useApp } from '@/context/AppProvider';
 import { FOCUS_OPTIONS, STREAK_CHOICES } from '@/lib/catalog';
@@ -86,7 +87,8 @@ export default function OnboardingScreen() {
                 and unlock lakeside quests.
               </Body>
               <View style={styles.hero}>
-                <Chewy colorId="moss" equipped={emptyEquip} size={200} mood="idle" />
+                <Garden />
+                <Chewy colorId="moss" equipped={emptyEquip} size={220} mood="idle" />
               </View>
             </View>
           )}
@@ -220,7 +222,7 @@ export default function OnboardingScreen() {
           {step === 0 && <PrimaryButton label="Let’s hatch" onPress={next} />}
           {step === 1 && <PrimaryButton label={hatched ? 'Meet Chewy' : 'Keep tapping the egg'} onPress={hatched ? next : tapEgg} />}
           {step === 2 && <PrimaryButton label={`Hi, ${name || 'Chewy'}`} onPress={next} />}
-          {step === 3 && <PrimaryButton label="That’s the name" onPress={next} />}
+          {step === 3 && <PrimaryButton label="That's the name" onPress={next} />}
           {step === 4 && <PrimaryButton label="These feel right" onPress={next} />}
           {step === 5 && <PrimaryButton label="Continue" onPress={next} />}
           {step === 6 && (
@@ -264,8 +266,12 @@ const styles = StyleSheet.create({
   hero: {
     alignItems: 'center',
     marginTop: 20,
-    minHeight: 210,
+    minHeight: 248,
     justifyContent: 'center',
+    borderRadius: 28,
+    overflow: 'hidden',
+    position: 'relative',
+    backgroundColor: '#D8EDE3',
   },
   swatches: {
     flexDirection: 'row',

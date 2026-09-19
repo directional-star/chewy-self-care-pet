@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { Animated, Easing, Pressable, StyleSheet, View } from 'react-native';
+import { Animated, Easing, Platform, Pressable, StyleSheet, View } from 'react-native';
 import Svg, { Ellipse, Path } from 'react-native-svg';
 
 import { chewyPalettes, type ColorId } from '@/lib/theme';
@@ -26,13 +26,13 @@ export function Egg({
           toValue: 1,
           duration: 700,
           easing: Easing.inOut(Easing.sin),
-          useNativeDriver: true,
+          useNativeDriver: Platform.OS !== 'web',
         }),
         Animated.timing(wobble, {
           toValue: -1,
           duration: 700,
           easing: Easing.inOut(Easing.sin),
-          useNativeDriver: true,
+          useNativeDriver: Platform.OS !== 'web',
         }),
       ]),
     );
@@ -42,8 +42,8 @@ export function Egg({
 
   const tap = () => {
     Animated.sequence([
-      Animated.timing(squash, { toValue: 0.92, duration: 80, useNativeDriver: true }),
-      Animated.spring(squash, { toValue: 1, friction: 4, useNativeDriver: true }),
+      Animated.timing(squash, { toValue: 0.92, duration: 80, useNativeDriver: Platform.OS !== 'web' }),
+      Animated.spring(squash, { toValue: 1, friction: 4, useNativeDriver: Platform.OS !== 'web' }),
     ]).start();
     onPress();
   };

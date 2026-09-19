@@ -16,7 +16,7 @@ export function Garden({ variant = 'day' }: { variant?: 'day' | 'sunset' | 'nigh
   const hillBack = variant === 'night' ? '#24382E' : variant === 'sunset' ? '#C48A58' : '#A7C98A';
 
   return (
-    <View style={styles.wrap} pointerEvents="none">
+    <View style={[styles.wrap, { pointerEvents: 'none' }]}>
       <LinearGradient colors={[...sky]} style={StyleSheet.absoluteFill} />
       {variant === 'night' ? (
         <>
@@ -26,7 +26,7 @@ export function Garden({ variant = 'day' }: { variant?: 'day' | 'sunset' | 'nigh
           <CircleDot x={330} y={52} size={3} color="#F7E7A8" />
         </>
       ) : (
-        <View style={[styles.sun, variant === 'sunset' && styles.sunSet]} />
+        <View style={[styles.sun, variant === 'sunset' ? styles.sunSet : null]} />
       )}
       <Svg width="100%" height="100%" viewBox="0 0 390 280" preserveAspectRatio="xMidYMax slice">
         <Ellipse cx="80" cy="168" rx="110" ry="40" fill={hillBack} />

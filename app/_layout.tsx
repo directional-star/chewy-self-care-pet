@@ -2,13 +2,17 @@ import { DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
-import { Platform, StyleSheet, View } from 'react-native';
+import { LogBox, Platform, StyleSheet, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { AppProvider } from '@/context/AppProvider';
 import { colors } from '@/lib/theme';
 
 SplashScreen.preventAutoHideAsync().catch(() => {});
+LogBox.ignoreLogs(['collapsable', 'useNativeDriver', 'pointerEvents', 'boxShadow', 'shadow']);
+if (Platform.OS === 'web') {
+  LogBox.ignoreAllLogs(true);
+}
 
 const navTheme = {
   ...DefaultTheme,
@@ -25,6 +29,16 @@ const navTheme = {
 export default function RootLayout() {
   useEffect(() => {
     SplashScreen.hideAsync().catch(() => {});
+    if (Platform.OS === 'web' && typeof document !== 'undefined') {
+      const id = 'chewy-nunito';
+      if (!document.getElementById(id)) {
+        const link = document.createElement('link');
+        link.id = id;
+        link.rel = 'stylesheet';
+        link.href = 'https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800&display=swap';
+        document.head.appendChild(link);
+      }
+    }
   }, []);
 
   return (
@@ -67,6 +81,6 @@ const styles = StyleSheet.create({
           borderRightWidth: 1,
           borderColor: '#d8d0c2',
         }
-      : null),
+      : {}),
   },
 });

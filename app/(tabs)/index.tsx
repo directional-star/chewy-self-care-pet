@@ -99,8 +99,10 @@ const styles = StyleSheet.create({
     paddingBottom: 28,
   },
   gardenBox: {
-    height: 360,
+    height: 390,
     overflow: 'hidden',
+    position: 'relative',
+    backgroundColor: '#D6EFE4',
   },
   topRow: {
     flexDirection: 'row',
