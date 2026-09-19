@@ -1,11 +1,10 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Animated, Easing, Platform, Pressable, StyleSheet, View } from 'react-native';
 import Svg, { Circle, Ellipse, Path, Rect } from 'react-native-svg';
 
 import { chewyPalettes, type ColorId } from '@/lib/theme';
 import type { Equipped } from '@/lib/types';
 
-const AnimatedEllipse = Animated.createAnimatedComponent(Ellipse);
 const nativeDriver = Platform.OS !== 'web';
 
 type Mood = 'idle' | 'walk' | 'celebrate';
@@ -27,8 +26,8 @@ export function Chewy({
   const sway = useRef(new Animated.Value(0)).current;
   const bob = useRef(new Animated.Value(0)).current;
   const walk = useRef(new Animated.Value(0)).current;
-  const blink = useRef(new Animated.Value(1)).current;
   const hop = useRef(new Animated.Value(0)).current;
+  const [eyeOpen, setEyeOpen] = useState(true);
 
   useEffect(() => {
     const swayLoop = Animated.loop(
@@ -73,20 +72,24 @@ export function Chewy({
 
   useEffect(() => {
     let alive = true;
+    let timeout: ReturnType<typeof setTimeout>;
     const run = () => {
-      Animated.sequence([
-        Animated.delay(2400 + Math.random() * 1800),
-        Animated.timing(blink, { toValue: 0.1, duration: 80, useNativeDriver: false }),
-        Animated.timing(blink, { toValue: 1, duration: 110, useNativeDriver: false }),
-      ]).start(({ finished }) => {
-        if (finished && alive) run();
-      });
+      timeout = setTimeout(() => {
+        if (!alive) return;
+        setEyeOpen(false);
+        timeout = setTimeout(() => {
+          if (!alive) return;
+          setEyeOpen(true);
+          run();
+        }, 120);
+      }, 2400 + Math.random() * 1800);
     };
     run();
     return () => {
       alive = false;
+      clearTimeout(timeout);
     };
-  }, [blink]);
+  }, []);
 
   useEffect(() => {
     if (mood !== 'walk') {
@@ -127,9 +130,6 @@ export function Chewy({
     bob.interpolate({ inputRange: [0, 1], outputRange: [0, -6] }),
   );
   const translateX = walk.interpolate({ inputRange: [-1, 1], outputRange: [-20, 20] });
-  const eyeRy = blink.interpolate({ inputRange: [0, 1], outputRange: [1, 11] });
-  const pupilRy = blink.interpolate({ inputRange: [0, 1], outputRange: [0.5, 6] });
-
   return (
     <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel="Chewy the baby alligator">
       <Animated.View
@@ -234,9 +234,15 @@ export function Chewy({
         </Svg>
         <View style={[StyleSheet.absoluteFill, { pointerEvents: 'none' }]}>
           <Svg width={size} height={size * 0.82} viewBox="0 0 280 220">
-            <AnimatedEllipse cx="196" cy="86" rx="14" ry={eyeRy} fill="#FFFDF8" stroke={palette.outline} strokeWidth={2} />
-            <AnimatedEllipse cx="202" cy="88" rx="6.5" ry={pupilRy} fill={palette.outline} />
-            <Circle cx="205" cy="84" r="2.2" fill="#FFFDF8" />
+            {eyeOpen ? (
+              <>
+                <Ellipse cx="196" cy="86" rx="14" ry="11" fill="#FFFDF8" stroke={palette.outline} strokeWidth={2} />
+                <Ellipse cx="202" cy="88" rx="6.5" ry="6" fill={palette.outline} />
+                <Circle cx="205" cy="84" r="2.2" fill="#FFFDF8" />
+              </>
+            ) : (
+              <Path d="M182 86 Q196 92 210 86" stroke={palette.outline} strokeWidth={3} fill="none" strokeLinecap="round" />
+            )}
           </Svg>
         </View>
       </Animated.View>

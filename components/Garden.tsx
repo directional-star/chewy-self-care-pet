@@ -1,5 +1,5 @@
 import { LinearGradient } from 'expo-linear-gradient';
-import { StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View } from 'react-native';
 import Svg, { Circle, Ellipse, Path } from 'react-native-svg';
 
 import { colors } from '@/lib/theme';
@@ -92,9 +92,14 @@ const styles = StyleSheet.create({
     height: 42,
     borderRadius: 21,
     backgroundColor: '#F6E39A',
-    shadowColor: '#F6E39A',
-    shadowOpacity: 0.7,
-    shadowRadius: 16,
+    ...Platform.select({
+      web: { boxShadow: '0 0 18px rgba(246, 227, 154, 0.8)' },
+      default: {
+        shadowColor: '#F6E39A',
+        shadowOpacity: 0.7,
+        shadowRadius: 16,
+      },
+    }),
   },
   sunSet: {
     backgroundColor: '#F0A36A',
